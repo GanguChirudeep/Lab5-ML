@@ -638,3 +638,64 @@ plt.ylabel('Number of Iterations to Converge')
 plt.title('Convergence Analysis with Varying Learning Rates')
 plt.grid(True)
 plt.show()
+
+#A5
+import numpy as np
+
+# Define initial weights and learning rate
+W0 = 0.1
+W1 = 0.1
+W2 = 0.1
+W3 = 0.1
+learning_rate = 0.1
+
+# Training data
+data = np.array([
+    [20, 6, 2, 386],
+    [16, 3, 6, 289],
+    [27, 6, 2, 393],
+    [19, 1, 2, 110],
+    [24, 4, 2, 280],
+    [22, 1, 5, 167],
+    [15, 4, 2, 271],
+    [18, 4, 2, 274],
+    [21, 1, 4, 148],
+    [16, 2, 4, 198]
+])
+
+# Target values (High Value or Low Value)
+targets = np.array([1, 1, 1, 0, 1, 0, 1, 1, 0, 0])
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+def predict(x1, x2, x3, x4):
+    weighted_sum = W0 + W1 * x1 + W2 * x2 + W3 * x3
+    return sigmoid(weighted_sum)
+
+def train_perceptron(max_epochs, data, targets):
+    global W0, W1, W2, W3  # Declare global variables
+    for epoch in range(max_epochs):
+        total_error = 0
+        for i in range(len(data)):
+            x1, x2, x3, x4 = data[i]
+            target = targets[i]
+            prediction = predict(x1, x2, x3, x4)
+            error = target - prediction
+            total_error += error
+            W0 += learning_rate * error
+            W1 += learning_rate * error * x1
+            W2 += learning_rate * error * x2
+            W3 += learning_rate * error * x3
+        if total_error == 0:
+            break
+
+# Train the perceptron
+train_perceptron(1000, data, targets)
+
+# Test the perceptron and print the results
+for i in range(len(data)):
+    x1, x2, x3, x4 = data[i]
+    prediction = predict(x1, x2, x3, x4)
+    classification = "Yes" if prediction >= 0.5 else "No"
+    print(f"Customer C_{i + 1}: {classification}")
