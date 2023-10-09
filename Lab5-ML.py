@@ -699,3 +699,8 @@ for i in range(len(data)):
     prediction = predict(x1, x2, x3, x4)
     classification = "Yes" if prediction >= 0.5 else "No"
     print(f"Customer C_{i + 1}: {classification}")
+
+#A6
+# Calculate the pseudo-inverse of the data
+pseudo_inverse = np.linalg.pinv(data)
+print("Pseudo inverse is",pseudo_inverse)
