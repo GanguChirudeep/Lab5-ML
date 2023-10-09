@@ -579,3 +579,62 @@ for activation_name, activation_fn in activation_functions:
     plt.title(f'Error Convergence ({activation_name} Activation Function)')
     plt.grid(True)
     plt.show()
+
+
+#A4
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define initial weights
+W0 = 10
+W1 = 0.2
+W2 = -0.75
+
+# Training data for XOR gate
+# XOR gate truth table: inputs and corresponding outputs
+inputs = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+targets = np.array([0, 1, 1, 0])
+
+def activate(sum):
+    return 1 if sum >= 0 else 0
+
+# Perceptron training function
+def train_perceptron(weights, learning_rate, max_epochs, data):
+    errors = []  # To store error values for each epoch
+    for epoch in range(max_epochs):
+        total_error = 0
+        for i in range(len(data)):
+            x1, x2 = data[i]
+            target = targets[i]
+            # Calculate the weighted sum
+            weighted_sum = weights[0] + weights[1] * x1 + weights[2] * x2
+            # Calculate the error
+            error = target - activate(weighted_sum)
+            total_error += error
+            # Update weights
+            weights[0] += learning_rate * error
+            weights[1] += learning_rate * error * x1
+            weights[2] += learning_rate * error * x2
+        errors.append(total_error)
+        if total_error == 0:
+            break
+    return errors
+
+# Varying learning rates
+learning_rates = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+iteration_counts = []
+
+for lr in learning_rates:
+    # Clone the initial weights to keep them the same for each learning rate
+    weights = [W0, W1, W2]
+    # Train the perceptron and collect errors
+    error_values = train_perceptron(weights, lr, 100, inputs)
+    iteration_counts.append(len(error_values))
+
+# Plot the number of iterations vs. learning rates
+plt.plot(learning_rates, iteration_counts, marker='o', linestyle='-', color='b')
+plt.xlabel('Learning Rate')
+plt.ylabel('Number of Iterations to Converge')
+plt.title('Convergence Analysis with Varying Learning Rates')
+plt.grid(True)
+plt.show()
