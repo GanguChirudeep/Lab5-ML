@@ -240,6 +240,69 @@ print(f"Number of Epochs: {epochs}")
 
 # In[ ]:
 
+#A1
+import numpy as np
+
+# Define initial weights and learning rate
+W0 = 10
+W1 = 0.2
+W2 = -0.75
+learning_rate = 0.05
+
+# Training data for AND gate
+# AND gate truth table: inputs and corresponding outputs
+inputs = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+targets = np.array([0, 0, 0, 1])
+
+def activate(sum):
+    return 1 if sum >= 0 else 0
+
+# Perceptron training function
+def train_perceptron(weights, learning_rate, max_epochs, data):
+    errors = []  # To store error values for each epoch
+    for epoch in range(max_epochs):
+        total_error = 0
+        for i in range(len(data)):
+            x1, x2 = data[i]
+            target = targets[i]
+            # Calculate the weighted sum
+            weighted_sum = weights[0] + weights[1] * x1 + weights[2] * x2
+            # Calculate the error
+            error = target - activate(weighted_sum)
+            total_error += error
+            # Update weights
+            weights[0] += learning_rate * error
+            weights[1] += learning_rate * error * x1
+            weights[2] += learning_rate * error * x2
+        errors.append(total_error)
+        if total_error == 0:
+            break
+    return weights, errors
+
+# Train the perceptron and collect errors
+trained_weights, error_values = train_perceptron([W0, W1, W2], learning_rate, 100, inputs)
+
+# Print the trained weights
+print("Trained Weights:")
+print(f"W0: {trained_weights[0]}, W1: {trained_weights[1]}, W2: {trained_weights[2]}")
+
+# Test the perceptron
+def test_perceptron(weights, data):
+    correct = 0
+    for i in range(len(data)):
+        x1, x2 = data[i]
+        target = targets[i]
+        weighted_sum = weights[0] + weights[1] * x1 + weights[2] * x2
+        prediction = activate(weighted_sum)
+        if prediction == target:
+            correct += 1
+        print(f"Input: ({x1}, {x2}), Target: {target}, Prediction: {prediction}")
+    accuracy = (correct / len(data)) * 100
+    print(f"Accuracy: {accuracy}%")
+
+# Test the trained perceptron
+print("\nTesting the Trained Perceptron:")
+test_perceptron(trained_weights, inputs)
 
 
 
