@@ -870,3 +870,69 @@ output = mlp.predict(inputs)
 # Print the output
 print(output)
 
+#A9
+import numpy as np
+
+class Perceptron:
+    def __init__(self, num_inputs, learning_rate=0.05):
+        self.weights = np.random.randn(num_inputs)
+        self.learning_rate = learning_rate
+
+    def forward_propagate(self, inputs):
+        weighted_sum = np.dot(inputs, self.weights)
+        output = 1 / (1 + np.exp(-weighted_sum))  # Use sigmoid activation
+        return output
+
+    def backpropagate(self, inputs, target_output, actual_output):
+        error = target_output - actual_output
+        delta = error * actual_output * (1 - actual_output)
+        self.weights += self.learning_rate * delta * inputs
+
+    def train(self, training_examples, num_epochs=100):
+        for epoch in range(num_epochs):
+            for inputs, target_output in training_examples:
+                actual_output = self.forward_propagate(inputs)
+                self.backpropagate(inputs, target_output, actual_output)
+
+    def predict(self, inputs):
+        return self.forward_propagate(inputs)
+
+# Create a new perceptron with 2 input features (for AND and XOR)
+num_inputs = 2
+perceptron = Perceptron(num_inputs)
+
+# Create a training dataset for AND
+training_and = [
+    (np.array([0, 0]), 0),
+    (np.array([0, 1]), 0),
+    (np.array([1, 0]), 0),
+    (np.array([1, 1]), 1)
+]
+
+# Create a training dataset for XOR
+training_xor = [
+    (np.array([0, 0]), 0),
+    (np.array([0, 1]), 1),
+    (np.array([1, 0]), 1),
+    (np.array([1, 1]), 0)
+]
+
+# Train the perceptron for AND
+perceptron.train(training_and)
+
+# Test the perceptron for AND
+inputs_and = np.array([1, 1])
+output_and = perceptron.predict(inputs_and)
+print("AND Gate:", output_and)
+
+# Train the perceptron for XOR
+perceptron.train(training_xor)
+
+# Test the perceptron for XOR
+inputs_xor = np.array([1, 1])
+output_xor = perceptron.predict(inputs_xor)
+print("XOR Gate:", output_xor)
+
+for inputs in inputs_list:
+    output = network.predict(inputs)
+    print(f"Input: {inputs}, Output: {output}")
