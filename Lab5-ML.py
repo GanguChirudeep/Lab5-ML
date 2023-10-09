@@ -1015,3 +1015,136 @@ mlp_project.fit(X_train, y_train)
 y_pred = mlp_project.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Accuracy on test data: {accuracy}")
+
+
+#A11
+#A11
+import numpy as np
+
+import pandas as pd  # You need to import pandas for DataFrame operations
+
+from sklearn.model_selection import train_test_split
+
+ 
+
+# Define the initial weights and learning rate
+
+W0 = 10
+
+W1 = 0.2
+
+W2 = -0.75
+
+learning_rate = 0.05
+
+ 
+
+# Assuming you have loaded 'df' and 'activation_maps' previously
+
+binary_df = df[df['Label'].isin([0, 1])]
+
+X = binary_df[['embed_1', 'embed_2']]
+
+y = binary_df['Label']
+
+# Split the data into training and testing sets
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+ 
+
+# Initialize variables for tracking epochs and errors
+
+epochs = 0
+
+errors = []
+
+ 
+
+# Define the Step activation function
+
+def step_activation(x):
+
+    return 1 if x >= 0 else 0
+
+ 
+
+# Training the perceptron
+
+max_epochs = 1000  # Set a maximum number of epochs to avoid infinite looping
+
+ 
+
+while epochs < max_epochs:
+
+    total_error = 0
+
+   
+
+    for i in range(len(X_train)):
+
+        # Calculate the weighted sum of inputs
+
+        weighted_sum = W0 + W1 * X_train.iloc[i, 0] + W2 * X_train.iloc[i, 1]
+
+       
+
+        # Apply the Step activation function
+
+        prediction = step_activation(weighted_sum)
+
+       
+
+        # Calculate the error
+
+        error = y_train.iloc[i] - prediction
+
+       
+
+        # Update weights
+
+        W0 = W0 + learning_rate * error
+
+        W1 = W1 + learning_rate * error * X_train.iloc[i, 0]
+
+        W2 = W2 + learning_rate * error * X_train.iloc[i, 1]
+
+       
+
+        total_error += error ** 2
+
+   
+
+    # Append the total error for this epoch to the list
+
+    errors.append(total_error)
+
+   
+
+    # Check for convergence
+
+    if total_error == 0:
+
+        break
+
+   
+
+    epochs += 1
+
+ 
+
+# Test the trained perceptron
+
+for i in range(len(X_test)):
+
+    weighted_sum = W0 + W1 * X_test.iloc[i, 0] + W2 * X_test.iloc[i, 1]
+
+    prediction = step_activation(weighted_sum)
+
+    print(f"Input: {X_test.iloc[i].values}, Target: {y_test.iloc[i]}, Predicted: {prediction}")
+
+ 
+
+print(f"Final Weights: W0 = {W0}, W1 = {W1}, W2 = {W2}")
+
+print(f"Number of Epochs: {epochs}")
