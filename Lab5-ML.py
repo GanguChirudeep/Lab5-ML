@@ -803,3 +803,70 @@ for inputs in inputs_list:
     output = network.predict(inputs)
     print(f"Input: {inputs}, Output: {output}")
 
+
+#A9
+import numpy as np
+
+class ANDGatePerceptron:
+    def __init__(self, learning_rate=0.05):
+        self.weights = np.random.randn(2)
+        self.bias = np.random.randn(1)
+        self.learning_rate = learning_rate
+
+    def forward_propagate(self, inputs):
+        weighted_sum = np.dot(inputs, self.weights) + self.bias
+        output = np.where(weighted_sum >= 0, 1, 0)
+        return output
+
+    def backpropagate(self, inputs, target_output, actual_output):
+        error = target_output - actual_output
+        delta = error * self.learning_rate
+        self.weights += delta * inputs
+        self.bias += delta
+
+    def train(self, training_examples):
+        for inputs, target_output in training_examples:
+            actual_output = self.forward_propagate(inputs)
+            self.backpropagate(inputs, target_output, actual_output)
+
+    def predict(self, inputs):
+        return self.forward_propagate(inputs)
+
+# Create a new perceptron
+perceptron = ANDGatePerceptron()
+
+# Create a training dataset
+training_examples = [(np.array([0, 0]), np.array([0])), (np.array([0, 1]), np.array([0])), (np.array([1, 0]), np.array([0])), (np.array([1, 1]), np.array([1]))]
+
+# Train the perceptron
+perceptron.train(training_examples)
+
+# Test the perceptron
+inputs = np.array([1, 1])
+output = perceptron.predict(inputs)
+
+# Print the output
+print(output)
+
+
+
+import numpy as np
+from sklearn.neural_network import MLPClassifier
+
+# Create an XOR gate dataset
+X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+y = np.array([0, 1, 1, 0])
+
+# Create an MLPClassifier with one hidden layer
+mlp = MLPClassifier(hidden_layer_sizes=(2,), activation='logistic', max_iter=10000, random_state=42)
+
+# Train the model
+mlp.fit(X, y)
+
+# Test the model
+inputs = np.array([[1, 1]])
+output = mlp.predict(inputs)
+
+# Print the output
+print(output)
+
