@@ -304,5 +304,11 @@ def test_perceptron(weights, data):
 print("\nTesting the Trained Perceptron:")
 test_perceptron(trained_weights, inputs)
 
-
+# Plot epochs against error values
+import matplotlib.pyplot as plt
+plt.plot(range(len(error_values)), error_values)
+plt.xlabel('Epochs')
+plt.ylabel('Sum-Square-Error')
+plt.title('Epochs vs. Sum-Square-Error in Perceptron Training')
+plt.show()
 
